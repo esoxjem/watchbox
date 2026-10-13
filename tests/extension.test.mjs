@@ -143,7 +143,7 @@ test('Firefox loads Watchbox automatically only on desktop YouTube', () => {
   assert.equal(manifest.web_accessible_resources,undefined,'No embedded app resources should be exposed');
   for(const file of [...script.js,...script.css,...inbox.js]) assert.ok(existsSync(`${file}`));
 });
-test('capture supports the current YouTube camel-case lockup title markup observed in Zen', () => {
+test('capture supports the current YouTube camel-case lockup title markup', () => {
   const {dom,capture:read}=capture('<ytd-rich-item-renderer><yt-lockup-view-model><div class="ytLockupViewModelHost"><a class="ytLockupViewModelContentImage" href="/watch?v=6loydpx4JkM">1:03:13</a><h3><a class="ytLockupMetadataViewModelTitle" href="/watch?v=6loydpx4JkM"><span>The best career advice: get more sleep</span></a></h3><a class="ytAttributedStringLink" href="/@BookOverflowPod">Book Overflow</a></div></yt-lockup-view-model></ytd-rich-item-renderer>', 'https://www.youtube.com/feed/subscriptions');
   assert.equal(read().videos.length,1);
   assert.equal(read().videos[0].title,'The best career advice: get more sleep');

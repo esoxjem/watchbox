@@ -1,4 +1,4 @@
-# Watchbox for YouTube — Firefox / Zen
+# Watchbox for YouTube — Firefox
 
 A standalone extension that adds a finite subscriptions inbox, native YouTube Watch Later saves, local dismissals, and distraction controls to YouTube's native interface.
 
@@ -11,7 +11,7 @@ A standalone extension that adds a finite subscriptions inbox, native YouTube Wa
 5. On a watch page, **Save to Watch later**, **Save position**, **Watched**, and **Focus** appear under the video information. Progress and watched status are recorded manually. Focus hides the whole sidebar and stays separate from persistent preferences.
 6. Click the **Watchbox toolbar button** to open settings, or use **about:addons → Watchbox → Preferences**. Changes save automatically and update open YouTube pages. **Hide Shorts** is controlled only from settings. The footer shows the installed version and links to bundled **Help** and **Report an issue** on GitHub.
 
-Temporary installations end when Zen/Firefox restarts. This unsigned development build must be loaded again; it is not a signed marketplace release.
+Temporary installations end when Firefox restarts. This unsigned development build must be loaded again; it is not a signed marketplace release.
 
 ## Settings
 
@@ -109,10 +109,8 @@ Tests cover library decisions and Undo, Inbox age limits and pagination, recycle
 
 Report bugs through [GitHub issues](https://github.com/esoxjem/watchbox/issues), including your browser version, steps to reproduce, and expected behavior. Remove account details and credentials from screenshots and logs.
 
-Keep pull requests focused, follow [AGENTS.md](AGENTS.md), and use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md). Development changes require a failing regression test before implementation, followed by the full validation commands above. Changes to YouTube integration should also be checked in Firefox or Zen, with any unverified behavior stated in the pull request.
+Keep pull requests focused, follow [AGENTS.md](AGENTS.md), and use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md). Development changes require a failing regression test before implementation, followed by the full validation commands above. Changes to YouTube integration should also be checked in Firefox, with any unverified behavior stated in the pull request.
 
 ## License
 
 Watchbox is available under the [MIT license](LICENSE). The vendored development skill retains its own [upstream copyright notices](.github/skills/test-driven-development/UPSTREAM.md).
-
-See the [source provenance audit](docs/source-provenance.md) for the replacement scope, comparison packages, and limitations when publishing existing Git history.

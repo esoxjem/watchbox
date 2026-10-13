@@ -148,7 +148,7 @@ test('web-ext packaging excludes store tooling and credential files', { timeout:
   const source = join(dir, 'source'), artifacts = join(dir, 'artifacts');
   await mkdir(source);
   await writeFile(join(source, 'manifest.json'), JSON.stringify({ manifest_version: 3, name: 'Package test', version: '1.0' }));
-  for (const file of ['scripts/amo.mjs', 'store/listing.example.json', 'tests/test.mjs', 'docs/source-provenance.md', 'artifacts/old.txt', 'README.md', 'AGENTS.md', 'package.json', '.env', '.env.example']) {
+  for (const file of ['scripts/amo.mjs', 'store/listing.example.json', 'tests/test.mjs', 'docs/development.md', 'artifacts/old.txt', 'README.md', 'AGENTS.md', 'package.json', '.env', '.env.example']) {
     await mkdir(join(source, file, '..'), { recursive: true });
     await writeFile(join(source, file), 'must not ship');
   }
