@@ -1,0 +1,6 @@
+{
+  "name": { "en-US": "Watchbox" },
+  "summary": { "en-US": "A calmer YouTube with a finite subscriptions inbox, native Watch Later saves, and distraction controls." },
+  "description": { "en-US": "Work through a finite subscriptions inbox, save videos to YouTube's Watch Later, and dismiss videos with Undo. Hide distracting parts of YouTube and keep its native interface.\n\nPreferences, inbox decisions, and resume positions stay in your browser. Watch Later saves use your signed-in YouTube account. Watchbox has no developer-operated backend or analytics." },
+  "homepage": { "en-US": "https://github.com/esoxjem/watchbox" }
+}

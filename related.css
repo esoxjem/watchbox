@@ -1,0 +1,62 @@
+/* Watchbox's native-page filters. Selectors identify YouTube surfaces;
+   root flags come from WatchboxPageSettings and remain reversible. */
+
+/* Browse pages and navigation. */
+:root[data-watchbox-hide-home-feed] ytd-browse[page-subtype="home"] :is(ytd-rich-grid-renderer, .ytd-rich-grid-renderer, ytd-grid-renderer),
+:root[data-watchbox-hide-home-feed] ytd-browse[role="main"]:not([page-subtype]):has(ytd-feed-filter-chip-bar-renderer):not(:has(#header #page-header-container)) :is(ytd-rich-grid-renderer, .ytd-rich-grid-renderer),
+:root[data-watchbox-hide-home-feed] #home-page-skeleton { display: none !important; }
+
+:root[data-watchbox-redirect-home] a.yt-simple-endpoint:not(#logo):is([href="/"], [href="/index"], [href^="/index?"]) { display: none !important; }
+
+:root[data-watchbox-hide-explore-trending] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer):has(a:is([href^="/feed/explore"], [href^="/feed/trending"])),
+:root[data-watchbox-hide-explore-trending] a.yt-simple-endpoint:is([href^="/feed/explore"], [href^="/feed/trending"]),
+:root[data-watchbox-hide-explore-trending] ytd-guide-section-renderer:has(a[href^="/feed/storefront"]),
+:root[data-watchbox-hide-explore-trending] ytd-browse:is([page-subtype="explore"], [page-subtype="trending"]) { display: none !important; }
+
+:root[data-watchbox-hide-more-from-you-tube] ytd-guide-section-renderer:has(a:is([href="/premium"], [href^="https://music.youtube.com"], [href^="https://www.youtubekids.com"], [href^="https://youtubekids.com"])) { display: none !important; }
+
+:root[data-watchbox-hide-subscriptions] :is(ytd-guide-section-renderer, ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer):has(a[href^="/feed/subscriptions"]),
+:root[data-watchbox-hide-subscriptions] a[href^="/feed/subscriptions"],
+:root[data-watchbox-hide-subscriptions] ytd-browse[page-subtype="subscriptions"] { display: none !important; }
+
+/* Shorts use content identity; the title fallback is limited to navigation. */
+:root[data-watchbox-hide-shorts] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-compact-video-renderer, yt-lockup-view-model):has(a[href*="/shorts/"]),
+:root[data-watchbox-hide-shorts] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer):has(a[href^="/shorts"]),
+:root[data-watchbox-hide-shorts] :is(ytd-guide-renderer, ytd-mini-guide-renderer, ytd-guide-section-renderer, ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) a[title="Shorts"],
+:root[data-watchbox-hide-shorts] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+:root[data-watchbox-hide-shorts] :is(ytd-reel-shelf-renderer, ytd-rich-grid-renderer[is-shorts-grid], yt-tab-shape[tab-title="Shorts"]),
+:root[data-watchbox-hide-shorts] grid-shelf-view-model:has(a[href^="/shorts/"]),
+:root[data-watchbox-hide-shorts] ytd-notification-renderer:has(a[href^="/shorts/"]) { display: none !important; }
+
+:root[data-watchbox-hide-mixes] :is(ytd-radio-renderer, ytd-compact-radio-renderer, .ytp-videowall-still[data-is-mix="true"]),
+:root[data-watchbox-hide-mixes] :is(ytd-rich-item-renderer, yt-lockup-view-model):has(a:is([href*="list=RD"], [href*="start_radio=1"])) { display: none !important; }
+
+:root[data-watchbox-hide-merch] :is(ytd-merch-shelf-renderer, #merch-shelf, #offer-module, #ticket-shelf, #clarify-box, .ytp-drawer) { display: none !important; }
+:root[data-watchbox-hide-inapt-search-results] ytd-search #primary :is(ytd-shelf-renderer, ytd-horizontal-card-list-renderer) { display: none !important; }
+
+/* The watch sidebar has independent controls for each region. */
+:root[data-watchbox-hide-video-sidebar] :is(ytd-watch-flexy #secondary, .ytd-watch-grid#secondary) { display: none !important; }
+:root[data-watchbox-hide-recommended] :is(#items.ytd-watch-next-secondary-results-renderer, .ytd-watch-grid > #contents, .ytp-pause-overlay) { display: none !important; }
+:root[data-watchbox-hide-live-chat] ytd-live-chat-frame { display: none !important; }
+:root[data-watchbox-hide-playlist] ytd-playlist-panel-renderer { display: none !important; }
+:root[data-watchbox-hide-fundraiser] :is(ytd-donation-shelf-renderer, #donation-shelf) { display: none !important; }
+
+/* Player overlays stay separate from playback and native controls. */
+:root[data-watchbox-hide-end-screen-feed] :is(.html5-endscreen:not(.mweb-endscreen), .ytp-fullscreen-grid) { display: none !important; }
+:root[data-watchbox-hide-end-screen-cards] :is(.ytp-ce-element, .ytp-ce-hide-button-container) { display: none !important; }
+:root[data-watchbox-disable-annotations] :is(.ytp-iv-video-content, .ytp-iv-drawer) { display: none !important; }
+
+/* Video information and comments. */
+:root[data-watchbox-hide-video-info] ytd-watch-metadata > :not(#watchbox-player-tools),
+:root[data-watchbox-hide-video-info] :is(ytd-video-primary-info-renderer, ytd-video-secondary-info-renderer) { display: none !important; }
+:root[data-watchbox-hide-buttons-bar] :is(#actions.ytd-watch-metadata, ytd-video-primary-info-renderer #menu-container) { display: none !important; }
+:root[data-watchbox-hide-channel] :is(#owner.ytd-watch-metadata, ytd-video-owner-renderer) { display: none !important; }
+:root[data-watchbox-hide-description] :is(#description.ytd-watch-metadata, ytd-video-secondary-info-renderer ytd-expander) { display: none !important; }
+:root[data-watchbox-hide-comments] :is(ytd-comments, #comment-teaser) { display: none !important; }
+:root[data-watchbox-hide-profile-photos] :is(ytd-comment-renderer, ytd-comment-view-model) #author-thumbnail,
+:root[data-watchbox-hide-profile-photos] ytd-comment-renderer yt-img-shadow { display: none !important; }
+
+/* Header layout is restored by removing its preference flag. */
+:root[data-watchbox-hide-top-header] :is(#masthead, #masthead-container, #guide-spacer) { display: none !important; }
+:root[data-watchbox-hide-top-header] ytd-app { --ytd-masthead-height: 0px; }
+:root[data-watchbox-hide-notifications] :is(ytd-notification-topbar-button-renderer, ytd-notification-topbar-button-shape-renderer) { display: none !important; }

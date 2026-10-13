@@ -1,0 +1,4 @@
+interface:
+  display_name: "Watchbox Architecture"
+  short_description: "Design Watchbox modules and browser portability"
+  default_prompt: "Use $watchbox-architecture to design or refactor Watchbox while preserving its native YouTube experience and future browser portability."
