@@ -1,6 +1,6 @@
 # Watchbox
 
-Inbox Zero for YouTube. A Firefox extension that turns your subscriptions into a finite inbox: save what you want to watch to YouTube’s Watch Later, dismiss the rest, and reach **All caught up**.
+Inbox Zero for YouTube. A Firefox extension that turns your subscriptions into a finite inbox: save what you want to watch to YouTube’s Watch Later, dismiss the rest, and reach **Inbox Zero**.
 
 Choose an inbox window of 1–30 days (14 by default), hide distractions like Shorts and recommendations, and keep YouTube’s native interface.
 

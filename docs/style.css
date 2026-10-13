@@ -53,7 +53,6 @@ h1 { margin: 0; font-size: clamp(52px, 5.2vw, 76px); line-height: 1.03; letter-s
   transition: background-color .15s ease;
 }
 .install:hover { background: #e4e6f0; text-decoration: none; }
-.compatibility { margin: 16px 0 0; font-size: 12px; line-height: 1.5; }
 .preview {
   margin: 0;
   aspect-ratio: 1032 / 700;
