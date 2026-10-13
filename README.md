@@ -29,4 +29,4 @@ Report bugs through [GitHub issues](https://github.com/esoxjem/watchbox/issues).
 
 ## License
 
-[MIT](LICENSE). The bundled development skill retains its [upstream notices](.agent/skills/test-driven-development/UPSTREAM.md).
+[MIT](LICENSE).

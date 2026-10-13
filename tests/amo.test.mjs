@@ -14,6 +14,7 @@ const exec = promisify(execFile);
 test('the draft store listing directs users to the Watchbox repository', async () => {
   const listing = JSON.parse(await readFile('store/listing.example.json', 'utf8'));
   assert.equal(listing.homepage['en-US'], 'https://github.com/esoxjem/watchbox');
+  assert.equal(listing.support_url?.['en-US'], 'https://github.com/esoxjem/watchbox/issues');
 });
 
 function run(args, env) {
@@ -68,12 +69,12 @@ test('AMO get reads the manifest extension listing with a signed short-lived JWT
   assert.ok(!result.stdout.includes(env.WEB_EXT_API_SECRET));
 });
 
-test('AMO update patches listing text without submitting an extension version', { timeout: 5000 }, async t => {
+test('AMO update patches listing text and the support URL without submitting an extension version', { timeout: 5000 }, async t => {
   const { env, requests } = await api(t);
   const dir = await mkdtemp(join(tmpdir(), 'watchbox-amo-'));
   t.after(() => rm(dir, { recursive: true, force: true }));
   const file = join(dir, 'listing.json');
-  const listing = { summary: { 'en-US': 'A calmer YouTube.' }, categories: { firefox: ['feeds-news-blogging'] } };
+  const listing = { summary: { 'en-US': 'A calmer YouTube.' }, categories: { firefox: ['feeds-news-blogging'] }, support_url: { 'en-US': 'https://github.com/esoxjem/watchbox/issues' } };
   await writeFile(file, JSON.stringify(listing));
   const result = await run(['update', file], env);
   assert.equal(result.code, 0, result.stderr);

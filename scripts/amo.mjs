@@ -14,7 +14,7 @@ try {
   let body;
   if (command === 'update') {
     const contents = await readFile(file, 'utf8');
-    const fields = new Set(['categories', 'contributions_url', 'default_locale', 'description', 'developer_comments', 'homepage', 'is_experimental', 'name', 'requires_payment', 'slug', 'summary', 'support_email', 'tags']);
+    const fields = new Set(['categories', 'contributions_url', 'default_locale', 'description', 'developer_comments', 'homepage', 'is_experimental', 'name', 'requires_payment', 'slug', 'summary', 'support_email', 'support_url', 'tags']);
     let listing;
     try { listing = JSON.parse(contents); } catch { /* Report a safe validation error below. */ }
     if (!listing || Array.isArray(listing) || typeof listing !== 'object' || !Object.keys(listing).length || Object.keys(listing).some(key => !fields.has(key))) {
