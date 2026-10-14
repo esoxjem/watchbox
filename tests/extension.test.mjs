@@ -94,6 +94,12 @@ test('current video capture uses the creator link without hidden duplicate label
 });
 test('the release package identifies itself as Watchbox in the browser', () => {
   const manifest=JSON.parse(readFileSync('manifest.json','utf8'));
+  const pkg=JSON.parse(readFileSync('package.json','utf8'));
+  const lock=JSON.parse(readFileSync('package-lock.json','utf8'));
+  assert.equal(manifest.version,'0.3.1');
+  assert.equal(pkg.version,manifest.version);
+  assert.equal(lock.version,manifest.version);
+  assert.equal(lock.packages[''].version,manifest.version);
   assert.equal(manifest.name,'Watchbox');
   assert.equal(manifest.browser_specific_settings.gecko.id,'watchbox-prototype@local.watchbox','Renaming must retain the installed extension identity');
 });

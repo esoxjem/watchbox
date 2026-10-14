@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Watchbox",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A calmer YouTube: a finite subscriptions inbox, subtle save controls, and focused viewing in YouTube's own theme.",
   "permissions": ["storage", "webRequest"],
   "host_permissions": ["https://www.youtube.com/*", "https://youtube.com/*"],
