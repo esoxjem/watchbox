@@ -96,7 +96,7 @@ test('the release package identifies itself as Watchbox in the browser', () => {
   const manifest=JSON.parse(readFileSync('manifest.json','utf8'));
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
   const lock=JSON.parse(readFileSync('package-lock.json','utf8'));
-  assert.equal(manifest.version,'0.3.1');
+  assert.equal(manifest.version,'0.3.2');
   assert.equal(pkg.version,manifest.version);
   assert.equal(lock.version,manifest.version);
   assert.equal(lock.packages[''].version,manifest.version);
@@ -1038,6 +1038,27 @@ test('watch metadata reads collaboration avatars from the native avatar stack', 
   const owner={videoOwnerRenderer:{avatarStack:{avatarStackViewModel:{avatars:[{avatarViewModel:{image:{sources:[{url:'https://yt3.ggpht.com/creator=s88'}]}}}]}}}};
   const metadata=dom.window.readYouTubeWatchMetadata(`<meta itemprop="datePublished" content="2026-10-01"><script>var ytInitialData = ${JSON.stringify(owner)};</script>`);
   assert.equal(metadata.channelAvatar,'https://yt3.ggpht.com/creator=s88');
+});
+test('archiving in Inbox collapses filtered shelf sections so later videos can fill the row', async t => {
+  const cards=feedCard+feedCard.replaceAll('aircAruvnKk','h6fcK_fRYaI');
+  const section=(id,hidden)=>`<ytd-rich-section-renderer id="${id}"><div id="content"><ytd-rich-shelf-renderer${hidden?' class="filtered-shelf"':''}>Shelf</ytd-rich-shelf-renderer></div></ytd-rich-section-renderer>`;
+  const p=await youtube(`<div id="contents">${cards}${section('filtered-section',true)}${feedCard.replaceAll('aircAruvnKk','pnv5iKB2hl4')}${section('visible-section',false)}</div>`);
+  t.after(()=>p.dom.window.close());pageCSS(p);
+  // Live Zen: a content filter hides the shelf, leaving its full-width flex item.
+  const nativeCSS=p.doc.createElement('style');
+  nativeCSS.textContent='ytd-rich-section-renderer{display:flex;width:100%}.filtered-shelf{display:none!important}';
+  p.doc.head.prepend(nativeCSS);
+  p.doc.querySelector('[data-watchbox-action="archive"]').click();await tick();
+  assert.equal(p.saved().items.find(item=>item.id==='aircAruvnKk').status,'archive');
+  assert.equal(shown(p,'#filtered-section'),false,'A hidden shelf must not leave a full-width item that breaks the row');
+  assert.equal(shown(p,'#visible-section'),true,'Visible shelves must keep their native layout');
+  assert.equal(shown(p,'[data-watchbox-id="pnv5iKB2hl4"]'),true,'The following video must remain available');
+  await openAll(p);
+  assert.equal(shown(p,'#filtered-section'),true,'Subscriptions must restore the native section layout');
+  p.doc.querySelector('#watchbox-inbox').click();await tick();
+  assert.equal(shown(p,'#filtered-section'),false);
+  await p.setPreferences({enabled:false});
+  assert.equal(shown(p,'#filtered-section'),true,'Disabling Watchbox must restore the native section layout');
 });
 test('subscriptions show a caught-up inbox after the last video is saved or archived', async t => {
   const p=await youtube(feedCard+feedCard.replaceAll('aircAruvnKk','h6fcK_fRYaI'));t.after(()=>p.dom.window.close());

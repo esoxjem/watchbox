@@ -330,6 +330,12 @@
     for(const grid of document.querySelectorAll('ytd-rich-grid-renderer, ytd-grid-renderer')) {
       const reachedLimit=options.enabled && location.pathname==='/feed/subscriptions' && view==='inbox' && [...grid.querySelectorAll('[data-watchbox-id]')].some(card=>isYouTubeVideoPastInboxLimit(card,options.inboxDays));
       grid.toggleAttribute('data-watchbox-age-limit',reachedLimit);
+      // A filtered shelf can leave a full-width, zero-height flex item between cards.
+      for(const section of grid.querySelectorAll(':scope > #contents > ytd-rich-section-renderer')) {
+        const children=section.querySelector(':scope > #content')?.children;
+        const hidden=options.enabled && location.pathname==='/feed/subscriptions' && view==='inbox' && Boolean(children?.length) && [...children].every(child=>child.hidden || getComputedStyle(child).display==='none');
+        section.toggleAttribute('data-watchbox-hidden',hidden);
+      }
     }
     const browse=[...document.querySelectorAll('ytd-browse')].find(element=>!element.hidden);
     const grid=browse?.querySelector('ytd-rich-grid-renderer, ytd-grid-renderer');
