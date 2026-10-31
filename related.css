@@ -47,7 +47,7 @@
 :root[data-watchbox-disable-annotations] :is(.ytp-iv-video-content, .ytp-iv-drawer) { display: none !important; }
 
 /* Video information and comments. */
-:root[data-watchbox-hide-video-info] ytd-watch-metadata > :not(#watchbox-player-tools),
+:root[data-watchbox-hide-video-info] ytd-watch-metadata > *,
 :root[data-watchbox-hide-video-info] :is(ytd-video-primary-info-renderer, ytd-video-secondary-info-renderer) { display: none !important; }
 :root[data-watchbox-hide-buttons-bar] :is(#actions.ytd-watch-metadata, ytd-video-primary-info-renderer #menu-container) { display: none !important; }
 :root[data-watchbox-hide-channel] :is(#owner.ytd-watch-metadata, ytd-video-owner-renderer) { display: none !important; }

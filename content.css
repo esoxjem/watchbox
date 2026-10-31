@@ -16,11 +16,9 @@ html[dark] #watchbox-inbox-empty svg{color:var(--yt-spec-text-secondary,#aaa)}
 [data-watchbox-view-hidden]{display:none!important}#watchbox-saved-shelf[hidden]{display:none!important}
 #watchbox-saved-shelf{color:var(--yt-spec-text-primary,inherit)}#watchbox-saved-shelf h2{font:600 20px/28px Roboto,Arial,sans-serif;margin:0 0 24px}.watchbox-saved-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 16px}.watchbox-saved-card{min-width:0}.watchbox-saved-card a{text-decoration:none}.watchbox-resume,#watchbox-saved-shelf>p{font:400 14px/20px Roboto,Arial,sans-serif;color:var(--yt-spec-text-secondary,#606060);margin:2px 0}
 @media(min-width:1600px){.watchbox-saved-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:1000px){.watchbox-saved-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.watchbox-saved-grid{grid-template-columns:1fr}}
-#watchbox-player-tools{display:flex;align-items:center;gap:8px;padding-top:12px;flex-wrap:wrap}#watchbox-player-tools[hidden]{display:none!important}#watchbox-player-tools :is(button,a){font:500 14px/20px Roboto,Arial,sans-serif;border:0;border-radius:18px;padding:8px 14px;color:var(--yt-spec-text-primary,inherit);background:var(--yt-spec-badge-chip-background,rgba(128,128,128,.15));cursor:pointer}#watchbox-player-tools :is(button,a):hover{background:var(--yt-spec-button-chip-background-hover,rgba(128,128,128,.25))}#watchbox-player-tools [aria-pressed=true]{background:var(--yt-spec-text-primary,#0f0f0f);color:var(--yt-spec-base-background,#fff)}
-html[data-watchbox-focus] ytd-watch-flexy #secondary{display:none!important}html[data-watchbox-focus] ytd-watch-flexy #primary{max-width:none!important}html[data-watchbox-focus] .ytp-endscreen-content{display:none!important}
 html[data-watchbox-quiet] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),html[data-watchbox-quiet] ytd-reel-shelf-renderer,html[data-watchbox-quiet] grid-shelf-view-model:has(a[href^="/shorts/"]){display:none!important}
-.watchbox-card-actions :is(button,a):focus-visible,#watchbox-player-tools :is(button,a):focus-visible{outline:2px solid var(--yt-spec-call-to-action,#065fd4);outline-offset:2px}
-html[dark] #watchbox-saved-shelf,html[dark] #watchbox-player-tools{color:#f1f1f1}html[dark] .watchbox-resume,html[dark] #watchbox-saved-shelf>p{color:#aaa}html[dark] #watchbox-player-tools [aria-pressed=true]{background:#f1f1f1;color:#0f0f0f}
+.watchbox-card-actions :is(button,a):focus-visible{outline:2px solid var(--yt-spec-call-to-action,#065fd4);outline-offset:2px}
+html[dark] #watchbox-saved-shelf{color:#f1f1f1}html[dark] .watchbox-resume,html[dark] #watchbox-saved-shelf>p{color:#aaa}
 /* Watchbox's circular thumbnail controls, scoped to YouTube cards. */
 .watchbox-card-actions{left:50%;right:auto;top:28%;transform:translate(-50%,-50%);gap:18px;pointer-events:none;z-index:4}
 .watchbox-card-actions :is(button,a){display:grid;place-items:center;width:48px;height:48px;min-width:48px;padding:0;border-radius:50%;background:#1119;border:1px solid #ffffff70;color:#fff;box-shadow:none}
@@ -39,10 +37,9 @@ html[dark] .watchbox-card-actions :is(button,a):hover,html[dark] .watchbox-card-
 .watchbox-saved-card:is(:hover,:focus-within)>.watchbox-thumbnail-shade{opacity:.45}
 /* YouTube mounts hover autoplay outside the card; it steals hover and covers actions. */
 html[data-watchbox-feed] #video-preview,html[data-watchbox-feed] ytd-video-preview{display:none!important}
-html[data-watchbox-disabled] :is(#watchbox-player-tools,#watchbox-saved-shelf,.watchbox-card-actions,.watchbox-thumbnail-shade){display:none!important}
+html[data-watchbox-disabled] :is(#watchbox-saved-shelf,.watchbox-card-actions,.watchbox-thumbnail-shade){display:none!important}
 /* Ambient-light canvases extend past the player; contain them at the watch-page edge. */
 html:not([data-watchbox-disabled]) ytd-watch-flexy:not([fullscreen]){overflow-x:clip!important}
-#watchbox-player-tools [hidden]{display:none!important}
 
 /* Watchbox navigation follows YouTube's expanded and compact guide dimensions. */
 /* Let wheel input reach the page below the shortened persistent guide. */

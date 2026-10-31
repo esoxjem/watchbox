@@ -2,7 +2,7 @@
 (async function () {
   const data=await browser.storage.local.get(['watchbox','watchboxPreferences']);
   let preferences=data.watchboxPreferences||{};
-  let state=data.watchbox||{items:[],history:[]}, busy=false, resync=false, timer, view=routeView(), savedSignature, focus=false;
+  let state=data.watchbox||{items:[],history:[]}, busy=false, resync=false, timer, view=routeView(), savedSignature;
   let loadingMetadata=false;const metadataRequests=new Set();
   let pendingWrites=Promise.resolve();
   const pendingSaves=new Map();
@@ -23,7 +23,6 @@
   toast.addEventListener('focusout',event=>{toastFocused=toast.contains(event.relatedTarget);dismissLater();});
   const shelf=document.createElement('section');shelf.id='watchbox-saved-shelf';shelf.hidden=true;
   const inboxEmpty=document.createElement('section');inboxEmpty.id='watchbox-inbox-empty';inboxEmpty.hidden=true;inboxEmpty.setAttribute('role','status');
-  const player=document.createElement('div');player.id='watchbox-player-tools';player.hidden=true;
   const autoplay=document.createElement('button');autoplay.id='watchbox-watch-later-autoplay';autoplay.className='ytp-button ytp-autonav-toggle delhi-fast-follow-autonav-toggle';autoplay.type='button';autoplay.setAttribute('role','switch');
   autoplay.dataset.priority='3';autoplay.dataset.tooltipTargetId='ytp-autonav-toggle-button';
   // Let YouTube render its own track, thumb, icons and responsive size variants.
@@ -78,24 +77,6 @@
       if(pause)pause.click();else video.pause();
     }
   },true);
-  for(const [action,label] of [['queue','Save to Watch later'],['position','Save position'],['watched','Watched'],['focus','Focus']]) {
-    const button=document.createElement('button');button.id=action==='position'?'watchbox-save-position':'watchbox-'+action;button.textContent=label;
-    button.onclick=async()=>{
-      if(action==='focus') {focus=!focus;update();return;}
-      button.disabled=true;
-      try {
-        const captured=captureYouTubePage();
-        if(captured.kind!=='video') return;
-        const id=WatchboxCore.videoId(location.href);
-        if(action==='queue')return await saveToYouTube(captured.videos[0],button);
-        await persist(current=>{
-          const next={...current,items:WatchboxCore.collect(current.items,captured.videos).items};
-          return action==='position'?next:WatchboxCore.change(next,id,action);
-        },action==='position'?'Position saved.':'Watched and dismissed.',action!=='position');
-      } finally {button.disabled=false;}
-    };
-    player.append(button);
-  }
   const titleLinks='a#video-title-link, a#video-title, a.ytLockupMetadataViewModelTitle, a.yt-lockup-metadata-view-model__title';
   const actionIcons={
     queue:[['circle',{cx:'10',cy:'10',r:'7'}],['path',{d:'M10 6v4l3 2'}]],
@@ -311,10 +292,6 @@
     syncSidebar();
     if(!options.enabled) {toast.hidden=true;clearTimeout(toastTimer);}
     document.documentElement.toggleAttribute('data-watchbox-quiet',options.enabled && options.hideShorts);
-    const watching=options.enabled && location.pathname==='/watch';
-    player.hidden=!watching;
-    document.documentElement.toggleAttribute('data-watchbox-focus',watching && focus);
-    player.querySelector('#watchbox-focus').setAttribute('aria-pressed',String(focus));
     undo.disabled=!state.history.length;
     for(const card of document.querySelectorAll('[data-watchbox-id]')) {
       const item=state.items.find(value=>value.id===card.dataset.watchboxId);
@@ -420,8 +397,6 @@
     try {
       if(!WatchboxPreferences.resolve(preferences).enabled) {document.documentElement.removeAttribute('data-watchbox-feed');update();return;}
       view=routeView();
-      const metadata=document.querySelector('ytd-watch-metadata');
-      if(metadata && player.parentElement!==metadata) metadata.append(player);
       const browse=[...document.querySelectorAll('ytd-browse')].find(element=>!element.hidden);
       const grid=browse?.querySelector('ytd-rich-grid-renderer, ytd-grid-renderer');
       document.documentElement.toggleAttribute('data-watchbox-feed',Boolean(grid) && location.pathname!=='/watch');

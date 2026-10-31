@@ -96,7 +96,7 @@ test('the release package identifies itself as Watchbox in the browser', () => {
   const manifest=JSON.parse(readFileSync('manifest.json','utf8'));
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
   const lock=JSON.parse(readFileSync('package-lock.json','utf8'));
-  assert.equal(manifest.version,'0.3.2');
+  assert.equal(manifest.version,'0.3.3');
   assert.equal(pkg.version,manifest.version);
   assert.equal(lock.version,manifest.version);
   assert.equal(lock.packages[''].version,manifest.version);
@@ -710,12 +710,13 @@ test('feed Save hides the inbox card immediately while native confirmation is pe
   assert.equal(p.doc.querySelector('#watchbox-toast-message').textContent,'Saved to Watch later.');
   assert.equal(p.doc.querySelector('#watchbox-undo').hidden,true,'Saving to Watch later must not offer Undo');
 });
-test('watch-page Save uses native confirmation and retains the captured resume position',async t=>{
-  const p=await youtube('<ytd-watch-metadata><h1>Neural network</h1></ytd-watch-metadata><video></video>','https://www.youtube.com/watch?v=aircAruvnKk');t.after(()=>p.dom.window.close());let native=0;
-  p.doc.querySelector('video').currentTime=123;
-  p.dom.window.WatchboxWatchLater.save=async(id,options)=>{native++;assert.equal(id,'aircAruvnKk');assert.equal(options.card,undefined);return 'confirmed';};
-  p.doc.querySelector('#watchbox-queue').click();await tick();
-  assert.equal(native,1,'Watch-page Save must use YouTube');
+test('feed Save uses native confirmation and retains existing resume positions',async t=>{
+  const initial={items:[{id:'aircAruvnKk',title:'Neural network',status:'inbox',progress:123}],history:[]};
+  const p=await youtube(feedCard,undefined,false,undefined,initial);t.after(()=>p.dom.window.close());let native=0;
+  const card=p.doc.querySelector('ytd-rich-item-renderer');
+  p.dom.window.WatchboxWatchLater.save=async(id,options)=>{native++;assert.equal(id,'aircAruvnKk');assert.equal(options.card,card);return 'confirmed';};
+  card.querySelector('[data-watchbox-action="queue"]').click();await tick();
+  assert.equal(native,1,'Feed Save must use YouTube');
   assert.equal(p.saved().items[0].watchLater,true);assert.equal(p.saved().items[0].progress,123);
 });
 test('failed confirmation restores the optimistic card and allows retry without changing stored data',async t=>{
@@ -875,9 +876,8 @@ test('Watch Later preserves existing local data without exposing retired migrati
   assert.equal(p.doc.querySelector('[data-watchbox-migrate]'),null);
   assert.deepEqual(p.saved(),legacy,'Retiring migration must retain local decisions and resume positions');
   const watch=await youtube('<ytd-watch-metadata><h1>Legacy save</h1></ytd-watch-metadata><video></video>','https://www.youtube.com/watch?v=aircAruvnKk&watchbox-migrate=1',false,undefined,legacy);t.after(()=>watch.dom.window.close());
-  assert.equal(watch.doc.querySelector('#watchbox-migrate-next'),null,'Old migration URLs must show ordinary watch controls');
-  watch.doc.querySelector('#watchbox-queue').click();await tick();
-  assert.equal(watch.saved().items[0].watchLater,true);assert.equal(watch.saved().items[0].progress,123);
+  assert.equal(watch.doc.querySelector('#watchbox-migrate-next'),null,'Old migration URLs must not expose migration controls');
+  assert.deepEqual(watch.saved(),legacy,'Opening a legacy watch URL must preserve local decisions and resume positions');
 });
 test('returned Inbox cards open the video for a native save',async t=>{
   const initial={items:[{id:'aircAruvnKk',title:'Archived',status:'inbox',returnedToInbox:true,progress:123}],history:[]};
@@ -1329,20 +1329,19 @@ test('returned Inbox cards retain same-tab resume links beside the native grid',
   assert.equal(p.doc.querySelectorAll('.watchbox-saved-card').length,1);
 });
 
-test('player actions live under native metadata and focus mode follows YouTube navigation', async () => {
-  const p=await youtube('<ytd-watch-metadata><h1>Neural network</h1></ytd-watch-metadata><ytd-video-owner-renderer><ytd-channel-name>3Blue1Brown</ytd-channel-name></ytd-video-owner-renderer><video></video>','https://www.youtube.com/watch?v=aircAruvnKk');
-  p.doc.querySelector('video').currentTime=123;
-  assert.ok(p.doc.querySelector('ytd-watch-metadata #watchbox-player-tools'),'Player controls must join native metadata');
-  p.doc.querySelector('#watchbox-save-position').click();await tick();
-  assert.equal(p.saved().items[0].progress,123);
-  p.doc.querySelector('#watchbox-focus').click();await tick();
-  assert.equal(p.doc.documentElement.hasAttribute('data-watchbox-focus'),true);
-  assert.equal(p.doc.querySelector('video').currentTime,123);
-  p.dom.window.history.pushState({},'', '/feed/subscriptions');
+test('watch pages keep native actions without adding a Watchbox toolbar', async t => {
+  const p=await youtube('<ytd-watch-metadata><h1>Neural network</h1><div id="actions"><button id="native-save">Save</button></div></ytd-watch-metadata><video></video>','https://www.youtube.com/watch?v=aircAruvnKk');
+  t.after(()=>p.dom.window.close());
+  const actions=p.doc.querySelector('#actions');
+  assert.equal(p.doc.querySelector('#watchbox-player-tools'),null,'The four-button Watchbox toolbar must not be added');
+  assert.equal(p.doc.querySelector('#watchbox-queue, #watchbox-save-position, #watchbox-watched, #watchbox-focus'),null);
+  assert.deepEqual([...actions.querySelectorAll('button')].map(button=>button.textContent),['Save']);
+  await p.setPreferences({enabled:false});
+  await p.setPreferences({enabled:true});
+  p.dom.window.history.pushState({},'', '/watch?v=h6fcK_fRYaI');
   p.doc.dispatchEvent(new p.dom.window.Event('yt-navigate-finish'));await new Promise(resolve=>setTimeout(resolve,150));
-  assert.equal(p.doc.querySelector('#watchbox-player-tools').hidden,true);
-  assert.equal(p.doc.documentElement.hasAttribute('data-watchbox-focus'),false);
-  p.dom.window.close();
+  assert.equal(p.doc.querySelector('#watchbox-player-tools'),null,'Settings changes and YouTube navigation must not recreate the toolbar');
+  assert.equal(p.doc.querySelector('#actions'),actions,'Native video actions must stay in place');
 });
 test('Shorts is controlled only through settings while all loaded inbox videos remain visible', async t => {
   const cards=Array.from({length:80},(_,i)=>`<ytd-rich-item-renderer><a id="video-title-link" href="/watch?v=${String(i).padStart(11,'0')}">Video ${i}</a></ytd-rich-item-renderer>`).join('');
@@ -1453,7 +1452,7 @@ test('autoplay previews cannot cover feed controls and the watch player stays na
   await new Promise(resolve=>setTimeout(resolve,150));
   assert.notEqual(p.dom.window.getComputedStyle(preview).display,'none','Feed-only styling must end when opening a video');
   assert.notEqual(p.dom.window.getComputedStyle(watch.querySelector('#movie_player')).display,'none');
-  assert.ok(watch.querySelector('#watchbox-player-tools'));
+  assert.equal(watch.querySelector('#watchbox-player-tools'),null);
   p.dom.window.close();
 });
 
